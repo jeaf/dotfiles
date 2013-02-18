@@ -2,3 +2,5 @@ _viminfo
 view
 vim/vimfiles/.netrwhist
 *.pyc
+*.swp
+
