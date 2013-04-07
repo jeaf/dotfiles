@@ -1,5 +1,9 @@
+" Language setup
+set langmenu=en_US.UTF-8    " sets the language of the menu (gvim)
+" language en                 " sets the language of the messages / ui (vim)
+
 " Configure GUI
-set guioptions=begrLt
+set guioptions=begmrLt
 set guifont=Consolas:h11:cANSI
 " set guifont=Courier_New:h10:cANSI
 
@@ -308,7 +312,7 @@ let MRU_Exclude_Files='Temp\\bzr_log'
 let MRU_Window_Height=15
 let MRU_Max_Menu_Entries=40
 let MRU_Max_Submenu_Entries=50
-map ,r :MRU<CR>
+map ,r :MRU<CR>/
 
 " Set vim to full screen
 map <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
