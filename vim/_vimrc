@@ -219,6 +219,17 @@ noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
 
+" Easier nav to buffers 1-9
+nmap ,1 :b 1<cr>
+nmap ,2 :b 2<cr>
+nmap ,3 :b 3<cr>
+nmap ,4 :b 4<cr>
+nmap ,5 :b 5<cr>
+nmap ,6 :b 6<cr>
+nmap ,7 :b 7<cr>
+nmap ,8 :b 8<cr>
+nmap ,9 :b 9<cr>
+
 " Remap arrow keys
 " Text bubbling (modified to use the arrow key directly instead of CTRL-up,
 " etc.)
