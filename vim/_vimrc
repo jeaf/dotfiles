@@ -315,8 +315,10 @@ filetype plugin on
 " Configure taglist
 let Tlist_Ctags_Cmd='%HOME_ROOT%\program\tool\ctags.exe'
 
-" Configure showmarks
+" Configure marks
 let g:showmarks_enable=0
+noremap <A-p> ['
+noremap <A-n> ]'
 
 " Configure pydoc
 let g:pydoc_cmd="C:/Python27/Lib/pydoc.py"
