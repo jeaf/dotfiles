@@ -332,3 +332,7 @@ map ,r :MRU<CR>/
 
 " Set vim to full screen
 map <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
+
+" Configure sparkup plugin
+let g:sparkupExecuteMapping = '<a-e>'
+let g:sparkupNextMapping    = '<a-n>'
