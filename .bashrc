@@ -1,20 +1,9 @@
-gvim()
-{
-  /c/Python27/python.exe ~/script/gvim.py --remote-silent "$@";
+xcd_func() {
+    ~/project/xcd/xcd.exe ~/.xcd.db ~/.xcd.dirchanger.sh "$@"
+    . ~/.xcd.dirchanger.sh
 }
 
-git_commit()
-{
-  git commit "$@";
-}
-
-alias e=gvim
+alias e=vim
 alias l="ls -lA --color --classify"
-alias gb="git branch -a -v -v"
-alias gc=git_commit
-alias gd="git diff"
-alias gr="git remote -v"
-alias gs="git status"
-
-alias tfx="cd /c/cae/pkg/mtfx_ver/main_2.2"
+alias x=xcd_func
 
