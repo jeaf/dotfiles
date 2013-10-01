@@ -190,9 +190,15 @@ set clipboard=unnamed " Always copy/paste to/from system clipboard
 " Enable completion (tab) enhanced menu
 set wildmenu
 
+"
 " XML editing
-vmap ,c <esc>a--><esc>'<i<!--<esc>'>$ " Comment out a XML block (see http://stackoverflow.com/questions/933975/commenting-out-xml-in-vim)
-vmap ,u <esc>l3x<esc>'<4x<esc>'>$     " Uncomment out a XML block
+"
+
+" Comment out a XML block (see http://stackoverflow.com/questions/933975/commenting-out-xml-in-vim)
+vmap ,c <esc>a--><esc>'<i<!--<esc>'>$
+
+" Uncomment out a XML block
+vmap ,u <esc>l3x<esc>'<4x<esc>'>$
 
 "
 " Buffer/windows mappings
