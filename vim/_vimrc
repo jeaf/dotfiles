@@ -31,7 +31,7 @@ map é /
 set hidden
 
 " Show line numbers
-" set number
+set number
 set relativenumber
 
 " Only show the tab line if there are two or more tabs
