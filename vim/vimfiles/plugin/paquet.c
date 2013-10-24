@@ -56,23 +56,23 @@ long base139_enc(const uint8_t* src, long srclen, uint8_t* dst, long dstlen)
 
         for (long j = DST_BLK_SIZE - 1; j >= 0; --j)
         {
-            printf("blk: %llx\n", blk);
             (dst + quot * DST_BLK_SIZE)[j] = base139_symbols[blk % SYMBOL_COUNT];
             blk /= SYMBOL_COUNT;
         }
     }
 
-    // Put the terminating null
-    (dst + quot * DST_BLK_SIZE)[DST_BLK_SIZE - pad] = 0;
-
-    return 0;
+    // Put the terminating null and return size
+    uint8_t* lastbyte = dst + quot * DST_BLK_SIZE;
+    if (pad > 0) lastbyte += DST_BLK_SIZE - pad;
+    *lastbyte = 0;
+    return lastbyte - dst;
 }
 
 int main()
 {
-    uint8_t src[] = "abcdefgh";
+    uint8_t src[] = "abcdefghi";
     uint8_t dst[37] = {0};
-    base139_enc(src, strlen(src), dst, sizeof(dst));
+    printf("Encoded len: %d\n", base139_enc(src, strlen(src), dst, sizeof(dst)));
     printf("Src    : %s\n", src);
     printf("Encoded: %s\n", dst);
 
