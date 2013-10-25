@@ -160,7 +160,7 @@ int main()
 {
     assert(base139_symbols_invmap['F'] == 34);
     assert(base139_symbols_invmap['b'] == 61);
-    uint8_t src[] = "abcdefghij";
+    uint8_t src[] = "abcdefg";
     //uint8_t src[] = {'a', 'b', 0, 0, 0, 0, 0, 0};
     uint8_t dst[37] = {0};
     uint8_t dec[30] = {0};
