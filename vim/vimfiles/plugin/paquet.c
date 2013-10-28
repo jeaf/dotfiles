@@ -59,107 +59,6 @@ void base139_dec_blk(const uint8_t* enc, const long pad)
     if (pad < 1) printf("%c", (blk & 0x00000000000000FFULL));
 }
 
-void base139_enc(const uint8_t* src, const long srclen, uint8_t* dst, const long dstlen)
-{
-    assert(strlen(base139_symbols) == SYMBOL_COUNT);
-    assert(src);
-    assert(srclen > 0);
-    assert(dst);
-
-    // Figure out padding
-    long quot = srclen / SRC_BLK_SIZE;
-    long rem  = srclen % SRC_BLK_SIZE;
-    long pad  = rem > 0 ? (SRC_BLK_SIZE - rem) : 0;
-    
-    // Compute the required space for dst. The +2 is for the terminating null,
-    // and the byte that contains the padding count.
-    assert(dstlen >= (((srclen + pad) / SRC_BLK_SIZE * ENC_BLK_SIZE) + 2));
-
-    // Process whole blocks
-    for (long i = 0; i < quot; ++i)
-    {
-        const uint8_t* blkptr = src + SRC_BLK_SIZE * i;
-        uint64_t blk = (uint64_t)blkptr[0] << 56 |
-                       (uint64_t)blkptr[1] << 48 |
-                       (uint64_t)blkptr[2] << 40 |
-                       (uint64_t)blkptr[3] << 32 |
-                       (uint64_t)blkptr[4] << 24 |
-                       (uint64_t)blkptr[5] << 16 |
-                       (uint64_t)blkptr[6] << 8  |
-                       (uint64_t)blkptr[7];
-        for (long j = ENC_BLK_SIZE - 1; j >= 0; --j)
-        {
-            (dst + i * ENC_BLK_SIZE)[j] = base139_symbols[blk % SYMBOL_COUNT];
-            blk /= SYMBOL_COUNT;
-        }
-    }
-
-    // Process last block
-    if (pad > 0)
-    {
-        uint8_t lastblk[8] = {0};
-        memcpy(lastblk, src + SRC_BLK_SIZE * quot, SRC_BLK_SIZE - pad);
-        uint64_t blk = (uint64_t)lastblk[0] << 56 |
-                       (uint64_t)lastblk[1] << 48 |
-                       (uint64_t)lastblk[2] << 40 |
-                       (uint64_t)lastblk[3] << 32 |
-                       (uint64_t)lastblk[4] << 24 |
-                       (uint64_t)lastblk[5] << 16 |
-                       (uint64_t)lastblk[6] << 8  |
-                       (uint64_t)lastblk[7];
-        for (long j = ENC_BLK_SIZE - 1; j >= 0; --j)
-        {
-            (dst + quot * ENC_BLK_SIZE)[j] = base139_symbols[blk % SYMBOL_COUNT];
-            blk /= SYMBOL_COUNT;
-        }
-    }
-
-    // Put the padding count byte and the terminating null
-    uint8_t* lastbyte = dst + quot * ENC_BLK_SIZE;
-    if (pad > 0) lastbyte += ENC_BLK_SIZE;
-    *lastbyte++ = base139_symbols[pad];
-    *lastbyte = 0;
-}
-
-long base139_dec(const uint8_t* enc, uint8_t* dst, long dstlen)
-{
-    assert(enc);
-    long enclen = strlen(enc);
-    assert(enclen > 0);
-    assert(dst);
-
-    // Compute number of blocks
-    long quot = enclen / ENC_BLK_SIZE;
-    long rem  = enclen % ENC_BLK_SIZE;
-    assert(rem == 1); // The pad count byte
-    long pad = base139_symbols_invmap[enc[enclen - 1]];
-    
-    // Compute the required space for dst
-    assert(dstlen >= (((enclen + pad) / ENC_BLK_SIZE * SRC_BLK_SIZE)));
-
-    // Process blocks
-    for (long i = 0; i < quot; ++i)
-    {
-        uint64_t blk = 0;
-        for (long j = 0; j < ENC_BLK_SIZE; ++j)
-        {
-            uint8_t symbol = (enc + i * ENC_BLK_SIZE)[j];
-            blk += base139_symbols_invmap[symbol] * powers_of_139[ENC_BLK_SIZE - j - 1];
-        }
-        uint8_t* dstptr = dst + i * SRC_BLK_SIZE;
-        dstptr[0] = (blk & 0xFF00000000000000ULL) >> 56;
-        dstptr[1] = (blk & 0x00FF000000000000ULL) >> 48;
-        dstptr[2] = (blk & 0x0000FF0000000000ULL) >> 40;
-        dstptr[3] = (blk & 0x000000FF00000000ULL) >> 32;
-        dstptr[4] = (blk & 0x00000000FF000000ULL) >> 24;
-        dstptr[5] = (blk & 0x0000000000FF0000ULL) >> 16;
-        dstptr[6] = (blk & 0x000000000000FF00ULL) >> 8;
-        dstptr[7] = (blk & 0x00000000000000FFULL);
-    }
-
-    return quot * SRC_BLK_SIZE - pad;
-}
-
 int main(int argc, char* argv[])
 {
     // Read the first 8 bytes, decide if we need to encode or decode
@@ -206,17 +105,5 @@ int main(int argc, char* argv[])
     }
 
     return 0;
-
-
-    //uint8_t dst[100] = {0};
-    //uint8_t dec[100] = {0};
-    //base139_enc(src, strlen(src), dst, sizeof(dst));
-    //printf("Src    : %s\n", src);
-    //printf("Encoded: %s\n", dst);
-    //len = base139_dec(dst, dec, sizeof(dec));
-    //dec[len] = 0;
-    //printf("Decoded: %s\n", dec);
-
-    //return 0;
 }
 
