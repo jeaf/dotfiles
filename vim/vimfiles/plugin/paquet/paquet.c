@@ -1,7 +1,11 @@
 // All Latin-1 printable characters (189)
 // !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ
 
+#include "miniz.h"
+
 #include <assert.h>
+#include <ctype.h>
+#include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -85,6 +89,7 @@ long base139_dec(const uint8_t* enc, uint8_t* dst, long dstlen)
     // Compute number of blocks
     long quot = enclen / ENC_BLK_SIZE;
     long rem  = enclen % ENC_BLK_SIZE;
+    printf("quot: %d, rem: %d, enclen: %d\n", quot, rem, enclen);
     assert(rem == 1); // The pad count byte
     long pad = base139_symbols_invmap[enc[enclen - 1]];
     
@@ -116,17 +121,43 @@ long base139_dec(const uint8_t* enc, uint8_t* dst, long dstlen)
 
 int main(int argc, char* argv[])
 {
-    uint8_t* src = argv[1];
-    uint8_t dst[100] = {0};
-    uint8_t dec[100] = {0};
-    base139_enc(src, strlen(src), dst, sizeof(dst));
-    printf("Src    : %s\n", src);
-    printf("Encoded: %s\n", dst);
-    long len = base139_dec(dst, dec, sizeof(dec));
-    dec[len] = 0;
-    printf("Decoded: %s\n", dec);
+    // Read stdin into buffer
+    long     buflen = 1024;
+    uint8_t* buf    = malloc(buflen);
+    long tot_len    = fread(buf, 1, buflen, stdin);
+    while (!feof(stdin))
+    {
+        long old_len = buflen;
+        buflen *= 2;
+        buf = realloc(buf, buflen);
+        tot_len += fread(buf + old_len, 1, buflen - old_len, stdin);
+    }
+    
+    // Determine if encoding of decoding
+    if (tot_len > 8 && strncmp(buf, "{paquet:", 8) == 0)
+    {
+        // Find the end of the paquet
+        char* back = buf + tot_len - 1;
+        while (back != buf)
+        {
+            --back;
+            if (isspace(*back) || *back == '}') *back = '\0';
+            else break;
+        }
+
+        // Decode it
+        printf("buf: %s\n", buf+8);
+        uint8_t* dec = malloc(tot_len * 2);
+        long len = base139_dec(buf + 8, dec, tot_len * 2);
+        printf("%s\n", dec);
+    }
+    else
+    {
+        uint8_t* dst = malloc(tot_len * 20);
+        base139_enc(buf, tot_len, dst, tot_len * 20);
+        printf("{paquet:%s}\n", dst);
+    }
 
     return 0;
 }
-
 
