@@ -49,14 +49,14 @@ void base139_dec_blk(const uint8_t* enc, const long pad)
     {
         blk += base139_symbols_invmap[enc[j]] * powers_of_139[ENC_BLK_SIZE - j - 1];
     }
-    printf("%c", (blk & 0xFF00000000000000ULL) >> 56);
-    printf("%c", (blk & 0x00FF000000000000ULL) >> 48);
-    printf("%c", (blk & 0x0000FF0000000000ULL) >> 40);
-    printf("%c", (blk & 0x000000FF00000000ULL) >> 32);
-    printf("%c", (blk & 0x00000000FF000000ULL) >> 24);
-    printf("%c", (blk & 0x0000000000FF0000ULL) >> 16);
-    printf("%c", (blk & 0x000000000000FF00ULL) >> 8);
-    printf("%c", (blk & 0x00000000000000FFULL));
+                 printf("%c", (blk & 0xFF00000000000000ULL) >> 56);
+    if (pad < 7) printf("%c", (blk & 0x00FF000000000000ULL) >> 48);
+    if (pad < 6) printf("%c", (blk & 0x0000FF0000000000ULL) >> 40);
+    if (pad < 5) printf("%c", (blk & 0x000000FF00000000ULL) >> 32);
+    if (pad < 4) printf("%c", (blk & 0x00000000FF000000ULL) >> 24);
+    if (pad < 3) printf("%c", (blk & 0x0000000000FF0000ULL) >> 16);
+    if (pad < 2) printf("%c", (blk & 0x000000000000FF00ULL) >> 8);
+    if (pad < 1) printf("%c", (blk & 0x00000000000000FFULL));
 }
 
 void base139_enc(const uint8_t* src, const long srclen, uint8_t* dst, const long dstlen)
@@ -198,7 +198,7 @@ int main(int argc, char* argv[])
         long pad = SRC_BLK_SIZE - len;
         while (!feof(stdin))
         {
-            len = fread(src, 1, sizeof(src), stdin);
+            len = fread(src, 1, SRC_BLK_SIZE, stdin);
             pad = SRC_BLK_SIZE - len;
             if (len > 0) base139_enc_blk(src, len);
         }
