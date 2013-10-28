@@ -89,7 +89,6 @@ long base139_dec(const uint8_t* enc, uint8_t* dst, long dstlen)
     // Compute number of blocks
     long quot = enclen / ENC_BLK_SIZE;
     long rem  = enclen % ENC_BLK_SIZE;
-    printf("quot: %d, rem: %d, enclen: %d\n", quot, rem, enclen);
     assert(rem == 1); // The pad count byte
     long pad = base139_symbols_invmap[enc[enclen - 1]];
     
@@ -146,15 +145,30 @@ int main(int argc, char* argv[])
         }
 
         // Decode it
-        printf("buf: %s\n", buf+8);
         uint8_t* dec = malloc(tot_len * 2);
         long len = base139_dec(buf + 8, dec, tot_len * 2);
-        printf("%s\n", dec);
+
+        // Decompress it
+        long uncomp_len = tot_len * 20;
+        uint8_t* uncomp_dec = malloc(uncomp_len);
+        mz_uncompress(uncomp_dec, &uncomp_len, dec, tot_len);
+        uncomp_dec[uncomp_len] = 0;
+
+        // Write to stdout
+        printf("%s\n", uncomp_dec);
     }
     else
     {
+        // Compress data
+        long comp_len = mz_compressBound(tot_len);
+        uint8_t* compbuf = malloc(comp_len);
+        mz_compress(compbuf, &comp_len, buf, tot_len);
+
+        // Encode data
         uint8_t* dst = malloc(tot_len * 20);
-        base139_enc(buf, tot_len, dst, tot_len * 20);
+        base139_enc(compbuf, comp_len, dst, tot_len * 20);
+
+        // Write to stdout
         printf("{paquet:%s}\n", dst);
     }
 
