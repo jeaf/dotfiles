@@ -1,6 +1,7 @@
 _viminfo
 view
 vim/vimfiles/.netrwhist
+*.o
 *.pyc
 *.swp
 paquet.exe
