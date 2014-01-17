@@ -3,7 +3,7 @@ set langmenu=en_US.UTF-8    " sets the language of the menu (gvim)
 " language en                 " sets the language of the messages / ui (vim)
 
 " Configure GUI
-set guioptions=begmrLt
+set guioptions=begrLt
 set guifont=Consolas:h11:cANSI
 " set guifont=Courier_New:h10:cANSI
 
