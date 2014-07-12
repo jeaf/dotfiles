@@ -41,8 +41,8 @@ set showtabline=1
 set grepprg=grep\ -n
 
 " Mappings used for tab navigation
-:map <C-S-tab> :tabprevious<cr>
-:map <C-tab> :tabnext<cr>
+" :map <C-S-tab> :tabprevious<cr>
+" :map <C-tab> :tabnext<cr>
 " :map <C-w> :tabclose<cr>
 " :map <C-t> :tabnew<cr>
 
@@ -208,8 +208,10 @@ vmap ,u <esc>l3x<esc>'<4x<esc>'>$
 :nnoremap <space> :buffers<CR>:buffer<Space>
 
 " Faster prev, next, first, last for buffers
-map <A-h> :bprevious<cr>
-map <A-l> :bnext<cr>
+" map <A-h> :bprevious<cr>
+map <A-h> :MBEbp<cr>
+" map <A-l> :bnext<cr>
+map <A-l> :MBEbn<cr>
 map <A-k> :bfirst<cr>
 map <A-j> :blast<cr>
 
@@ -235,6 +237,12 @@ nmap ,6 :b 6<cr>
 nmap ,7 :b 7<cr>
 nmap ,8 :b 8<cr>
 nmap ,9 :b 9<cr>
+
+" Setup minibufexpl
+let g:miniBufExplBuffersNeeded  = 0
+let g:miniBufExplCycleArround   = 1
+let g:miniBufExplStatusLineText = "%{getcwd()}"
+let g:miniBufExplUseSingleClick = 1
 
 " Remap arrow keys
 " Text bubbling (modified to use the arrow key directly instead of CTRL-up,
