@@ -1,12 +1,3 @@
-xcd_func() {
-    ~/project/xcd/xcd.exe ~/.xcd.db ~/.xcd.dirchanger.sh "$@"
-    . ~/.xcd.dirchanger.sh
-}
-
-alias e=vim
-alias l="ls -lA --color --classify"
-alias x=xcd_func
-
 xa()
 {
     if [ "$1" ]; then
@@ -21,4 +12,27 @@ x()
         cd $sel_dir
     fi
 }
+
+xcd_func()
+{
+    ~/project/xcd/xcd.exe ~/.xcd.db ~/.xcd.dirchanger.sh "$@"
+    . ~/.xcd.dirchanger.sh
+}
+
+alias e=vim
+alias ga='git add'
+alias gc='git commit'
+alias gco='git checkout'
+alias gd='git diff'
+alias gp='git push'
+alias gr='git remote'
+alias gs='git status'
+alias l='ls -l --color'
+alias la='l -a'
+alias vi=vim
+alias x=xcd_func
+
+export PATH="/usr/local/bin:/usr/bin"
+
+set -o vi
 
