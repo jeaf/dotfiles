@@ -11,10 +11,14 @@ from __future__ import (absolute_import, division, print_function)
 
 # You can import any python module as needed.
 import os
+import subprocess
 
 # You always need to import ranger.api.commands here to get the Command class:
 from ranger.api.commands import Command
 
+import sys
+sys.path.append("../../proj/scr")
+import util
 
 # Any class that is a subclass of "Command" will be integrated into ranger as a
 # command.  Try typing ":my_edit<ENTER>" in ranger!
@@ -60,3 +64,10 @@ class my_edit(Command):
         # This is a generic tab-completion function that iterates through the
         # content of the current directory.
         return self._tab_directory_content()
+
+class edit_with_gvim(Command):
+    def execute(self):
+        gvim_exec = util.drive_dir("c") / "Program Files (x86)" / "Vim" / "vim82" / "gvim.exe"
+        args = [gvim_exec, "--remote-silent", util.cygpath_w(self.fm.thisfile.path)]
+        subprocess.run(args, check=True)
+
