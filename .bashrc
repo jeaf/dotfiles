@@ -23,9 +23,10 @@ alias gr='git remote'
 alias gs='git status'
 alias l='ls -l --color'
 alias la='l -a'
+alias ranger='python3 ~/ranger/ranger.py'
 alias vi=vim
 
-export PATH="/usr/local/bin:/usr/bin"
+export PATH="/usr/local/bin:/usr/bin:~/bin"
 
 set -o vi
 
