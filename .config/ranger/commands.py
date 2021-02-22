@@ -11,13 +11,13 @@ from __future__ import (absolute_import, division, print_function)
 
 # You can import any python module as needed.
 import os
-import subprocess
+import pathlib
+import sys
 
 # You always need to import ranger.api.commands here to get the Command class:
 from ranger.api.commands import Command
 
-import sys
-sys.path.append("../../proj/scr")
+sys.path.append(str(pathlib.Path.home() / "proj" / "scr"))
 import util
 
 # Any class that is a subclass of "Command" will be integrated into ranger as a
@@ -67,7 +67,5 @@ class my_edit(Command):
 
 class edit_with_gvim(Command):
     def execute(self):
-        gvim_exec = util.drive_dir("c") / "Program Files (x86)" / "Vim" / "vim82" / "gvim.exe"
-        args = [gvim_exec, "--remote-silent", util.cygpath_w(self.fm.thisfile.path)]
-        subprocess.run(args, check=True)
+        util.edit_with_gvim(self.fm.thisfile.path)
 
